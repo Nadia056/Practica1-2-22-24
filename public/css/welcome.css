@@ -1,0 +1,93 @@
+
+button {
+    margin: 10px;
+    padding: 10px;
+    width: 100px;
+    background-color: rgb(0, 2, 98);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+a {
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+}
+div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+    /*typing text*/
+    .typing::before {
+      content: '';
+      position: absolute;
+      text-align: center;
+      right: 0;
+      width: 2px;
+      height: auto;
+      background: #000000;
+      animation: cursorBlink 0.8s steps(4) infinite;
+  }
+  @keyframes cursorBlink {
+  
+      0%,
+      75% {
+          opacity: 1;
+      }
+  
+      76%,
+      100% {
+          opacity: 0;
+      }
+  }
+  
+  .typing {
+      position: relative;
+      -webkit-box-reflect: below 1px linear-gradient(transparent, #3333);
+  }
+  
+  .typing pre {
+    text-align: center;
+      position: relative;
+      color: rgb(0, 0, 0);
+      letter-spacing: 1px;
+      font-size: 4.5rem;
+      overflow: hidden;
+      margin-bottom: 0;
+      animation: type 5s steps(25) infinite;
+  }
+  
+  @keyframes type {
+  
+      0%,
+      100% {
+          width: 0px;
+      }
+  
+      30%,
+      60% {
+          width: 300px;
+      }
+  }
+  
+  @media(max-width: 330px) {
+      .typing pre {
+          font-size: 3.5rem;
+          animation: type 3s steps(25) infinite;
+      }
+  
+      @keyframes type {
+  
+          0%,
+          100% {
+              width: 0px;
+          }
+  
+          30%,
+          60% {
+              width: 405px;
+          }
+      }
+  }
