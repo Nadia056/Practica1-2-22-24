@@ -226,7 +226,7 @@ class AuthController extends Controller
             //cierra la sesión
             //crear un nuevo codigo de verificación y guardarlo en la base de datos
             $user = User::find(Auth::id());
-            $user->verification_code = rand(1000, 9999);
+            $user->verification_code = null;
             $user->is_verified = false;
             $user->save();
             Auth::logout();

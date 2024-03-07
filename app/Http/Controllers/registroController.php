@@ -84,7 +84,7 @@ class registroController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'phone' => $request->phone,
-                'verification_code' => random_int(1000, 9999),
+                'verification_code' => null,
                 'role_id' => 2,
                 'is_verified'=>false
             ]);
