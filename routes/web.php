@@ -38,7 +38,7 @@ Route::get('/confirm/{id}', [AuthController::class, 'confirmEmail'])->name('conf
 Route::post('/2FA/{id}', [AuthController::class, 'codeVerification'])->name('2FA')->where('id', '[0-9]+');
 Route::get('/message', function () {
     try {
-        if (Auth::user()->role_id == 1) {
+        if (Auth::user()->role_id == 2) {
             return view('message');
         } else {
             log::channel('slack')->warning('User with id ' . Auth::id() . ' tried to access message view without permission');
