@@ -74,7 +74,7 @@ class registroController extends Controller
                 $client->save();
                 Log::channel('slack')->info('Admin registrado: ' . $request->email);
 
-                return redirect()->route('login.form');
+                return view('login');
                 
             }
 
