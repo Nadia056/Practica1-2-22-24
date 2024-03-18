@@ -32,7 +32,7 @@ class Handler extends ExceptionHandler
 
         if ($e instanceof QueryException || $e instanceof PDOException || $e instanceof ValidationException || $e instanceof ErrorException) {
             Log::error('Error: ' . $e->getMessage());
-            return view('error');
+            return response()->view('error');
         }
         return parent::render($request, $e);
     
