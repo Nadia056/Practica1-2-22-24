@@ -2,6 +2,9 @@
 
 namespace App\Exceptions;
 
+use ErrorException;
+use Exception;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Support\Facades\Log;
@@ -19,30 +22,24 @@ class Handler extends ExceptionHandler
     protected $levels = [
         //
     ];
-    public function report(Throwable $exception)
+
+    public function render($request, Throwable $e)
     {
-        if ($exception instanceof QueryException) {
-            return redirect()->route('register.form')->withErrors([['error' => 'contact with admin, error 500']])->withInput();
-            Log::error('Error en la base de datos: ' . $exception->getMessage());
-
+        if ($e instanceof QueryException) {
+            Log::error('Error en la base de datos: ' . $e->getMessage());
+            return response()->view('errors.500', [], 500);
         }
-        if ($exception instanceof PDOException) {
-            return redirect()->route('register.form')->withErrors([['error' => 'contact with admin, error 501']])->withInput();
-            Log::error('Error en la base de datos: ' . $exception->getMessage());
+        if ($e instanceof PDOException) {
+            Log::error('Error en la base de datos: ' . $e->getMessage());
+            return response()->view('errors.500', [], 500);
         }
-        if ($exception instanceof \Exception) {
-            return redirect()->route('register.form')->withErrors([['error' => 'contact with admin, error 502']])->withInput();
-            Log::error('Error en la base de datos: ' . $exception->getMessage());
+        if ($e instanceof ValidationException) {
+            Log::error('Error de validación: ' . $e->getMessage());
+            return response()->view('errors.500', [], 500);
         }
-        if ($exception instanceof \Illuminate\Validation\ValidationException) {
-            return redirect()->route('register.form')->withErrors([['error' => 'contact with admin, error 503']])->withInput();
-            Log::error('Error en la base de datos: ' . $exception->getMessage());
-        }
-        
-
-        parent::report($exception);
+        return parent::render($request, $e);
+    
     }
-
     /**
      * A list of the exception types that are not reported.
      *

@@ -13,8 +13,13 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
-use PDOException;
-
+use PDOException;    
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Routing\Exceptions\InvalidSignatureException;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Cookie;
 
 class AuthController extends Controller
 {
@@ -42,7 +47,7 @@ class AuthController extends Controller
     } catch (\Illuminate\Database\QueryException $e) {
         Log::error('QueryException during 2FA form: ' . $e->getMessage());
         return redirect()->route('login.form')->withErrors(['error' => '2758']);
-    } catch (\PDOException $e) {
+    } catch (PDOException $e) {
         Log::error('PDOException during 2FA form: ' . $e->getMessage());
         return redirect()->route('login.form')->withErrors(['error' => '2742']);
     }
@@ -122,7 +127,7 @@ class AuthController extends Controller
             Auth::login($user);
 
             return redirect()->route('welcome');
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             Log::error('PDOException during login: ' . $e->getMessage());
             return redirect()->route('login.form')->withErrors(['error' => 'contact with admin, error 2742']);
         } catch (\Illuminate\Database\QueryException $e) {
