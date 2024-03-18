@@ -56,4 +56,8 @@ Route::post('/register', [registroController::class, 'create'])->name('register'
 Route::get('/login', [AuthController::class, 'showAuthForm'])->name('login.form');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+Route::get('/error', function () {
+    return view('error');
+})->name('error');
+
 
