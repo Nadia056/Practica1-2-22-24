@@ -30,7 +30,7 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $e)
     {
         if ($e instanceof PDOException || $e instanceof QueryException) {
-            return response()->view('error', ['message' => 'Database error: ' . $e->getMessage()]);
+            return response()->view('error', ['message' => 'Error please try again or  later']);
         }
 
         return parent::render($request, $e);
