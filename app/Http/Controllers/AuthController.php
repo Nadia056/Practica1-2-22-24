@@ -140,18 +140,15 @@ class AuthController extends Controller
             Auth::login($user);
 
             return redirect()->route('welcome');
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             Log::error('PDOException during login: ' . $e->getMessage());
-            return view('error');
+            return view('error', ['message' => 'Database error: ' . $e->getMessage()]);
         } catch (\Illuminate\Database\QueryException $e) {
             Log::error('QueryException during login: ' . $e->getMessage());
-            return view('error');
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            Log::error('ValidationException during login: ' . $e->getMessage());
-            return redirect()->route('error');
+            return view('error', ['message' => 'Database query error: ' . $e->getMessage()]);
         } catch (\Exception $e) {
             Log::error('Exception during login: ' . $e->getMessage());
-            return view('error');
+            return view('error', ['message' => 'Unexpected error: ' . $e->getMessage()]);
         }
     }
 
