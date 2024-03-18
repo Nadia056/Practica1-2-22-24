@@ -126,6 +126,10 @@ class AuthController extends Controller
             Log::error('PDOException during login: ' . $e->getMessage());
             return redirect()->route('login.form')->withErrors(['error' => 'contact with admin, error 2742']);
         } catch (QueryException $e) {
+            if ($e->errorInfo[1] == 2006) {
+                Log::error('QueryException during login: ' . $e->getMessage());
+                return redirect()->route('login.form')->withErrors(['error' => 'contact with admin, error 500']);
+            }
             Log::error('QueryException during login: ' . $e->getMessage());
             return redirect()->route('login.form')->withErrors(['error' => 'contact with admin, error 2758']);
         } catch (ValidationException $e) {

@@ -105,6 +105,10 @@ class registroController extends Controller
             Log::error('Exception: ' . $e->getMessage());
             return redirect()->route('register.form')->withErrors(['error' => 'contact with admin, error 2733']);
         } catch (QueryException $e) {
+            if ($e->errorInfo[1] == 2006) {
+                Log::error('QueryException during login: ' . $e->getMessage());
+                return redirect()->route('login.form')->withErrors(['error' => 'contact with admin, error 500']);
+            }
             Log::error('QueryException: ' . $e->getMessage());
             return redirect()->route('register.form')->withErrors(['error' => 'contact with admin, error 2758']);
         } catch (PDOException $e) {
