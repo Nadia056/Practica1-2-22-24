@@ -3,17 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <title>Document</title>
 </head>
 <body>
+    <div class="container text-center">
     <h1>Check your Email</h1>
-    <p>We have sent a code to your email. Please enter the code below.</p>    
+    <p class="mt-2">We have sent a code to your email. Please enter the code below.</p>    
     <form id="verificationForm" action="/2FA/{{$id}}" method="POST" onsubmit="return validateCode()">
         @csrf
         <label for="code">Code</label>
         <!-- Agrega el atributo pattern para especificar el patrón -->
-        <input type="text" name="code" maxlength="4" id="code" pattern="\d{4}" title="Ingrese los digitos">
-        <button type="submit">Submit</button>
+        <input type="text" class="form-control" name="code" maxlength="4" id="code" pattern="\d{4}" title="Ingrese los digitos">
+        <button type="submit" class="btn btn-outline-dark">Submit</button>
     </form>
 
     @if ($errors->any())
@@ -24,8 +26,9 @@
                 @endforeach
             </ul>
         </div>
+        </div>
     @endif
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>
         function validateCode() {
             // Obtener el valor del código

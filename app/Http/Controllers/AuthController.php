@@ -131,10 +131,6 @@ class AuthController extends Controller
             Log::error('PDOException during login: ' . $e->getMessage());
             return redirect()->route('error');
         } catch (\Illuminate\Database\QueryException $e) {
-            if ($e->errorInfo[1] == 2006) {
-                Log::error('QueryException during login: ' . $e->getMessage());
-                return redirect()->route('error');
-            }
             Log::error('QueryException during login: ' . $e->getMessage());
             return redirect()->route('error');
         } catch (\Illuminate\Validation\ValidationException $e) {

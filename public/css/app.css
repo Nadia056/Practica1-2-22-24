@@ -22,7 +22,7 @@ h1>a {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    padding: 75px 95px;
+    padding:5vw;
     min-height: 80vh;
     display: flex;
     flex-direction: column;
@@ -132,4 +132,45 @@ a {
 
 .error {
     color: red;
+}
+
+@media screen and (max-width: 768px) {
+    .container-fluid {
+        flex-direction: column;
+    }
+
+    .intro-section,
+    .form-section {
+        padding: 10vw;
+        min-height: auto;
+    }
+
+    .intro-content-wrapper .intro-title {
+        font-size: 6vw;
+    }
+
+    .intro-content-wrapper .intro-text {
+        font-size: 2.5vw;
+    }
+
+    .intro-content-wrapper .btn-read-more {
+        font-size: 3vw;
+    }
+
+    .login-title {
+        font-size: 6vw;
+    }
+
+    .form-control {
+        font-size: 3vw;
+        padding: 5vw 3vw;
+    }
+
+    button {
+        margin: 5vw;
+        padding: 5vw;
+        width: 40vw;
+        max-width: 250px;
+        font-size: 4vw;
+    }
 }
