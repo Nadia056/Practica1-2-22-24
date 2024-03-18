@@ -96,7 +96,7 @@ class registroController extends Controller
             return view('login');
 
         }//Si hay errores, redirige al formulario de registro 
-         catch (ValidationException $e) {
+         catch (\Illuminate\Validation\ValidationException $e) {
            
             Log::error('ValidationException: ' . $e->getMessage());
             return redirect()->route('register.form')->withErrors(['error' => 'contact with admin, error2727 ']);
@@ -104,14 +104,14 @@ class registroController extends Controller
         catch (\Exception $e) {
             Log::error('Exception: ' . $e->getMessage());
             return redirect()->route('register.form')->withErrors(['error' => 'contact with admin, error 2733']);
-        } catch (QueryException $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
             if ($e->errorInfo[1] == 2006) {
                 Log::error('QueryException during login: ' . $e->getMessage());
                 return redirect()->route('login.form')->withErrors(['error' => 'contact with admin, error 500']);
             }
             Log::error('QueryException: ' . $e->getMessage());
             return redirect()->route('register.form')->withErrors(['error' => 'contact with admin, error 2758']);
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             Log::error('PDOException: ' . $e->getMessage());
             return redirect()->route('register.form')->withErrors(['error' => 'contact with admin, error 2742']);
         }

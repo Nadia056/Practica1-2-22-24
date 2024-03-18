@@ -2,7 +2,11 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
+use PDOException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -15,6 +19,29 @@ class Handler extends ExceptionHandler
     protected $levels = [
         //
     ];
+    public function report(Throwable $exception)
+    {
+        if ($exception instanceof QueryException) {
+            return redirect()->route('register.form')->withErrors([['error' => 'contact with admin, error 500']])->withInput();
+            Log::error('Error en la base de datos: ' . $exception->getMessage());
+
+        }
+        if ($exception instanceof PDOException) {
+            return redirect()->route('register.form')->withErrors([['error' => 'contact with admin, error 501']])->withInput();
+            Log::error('Error en la base de datos: ' . $exception->getMessage());
+        }
+        if ($exception instanceof \Exception) {
+            return redirect()->route('register.form')->withErrors([['error' => 'contact with admin, error 502']])->withInput();
+            Log::error('Error en la base de datos: ' . $exception->getMessage());
+        }
+        if ($exception instanceof \Illuminate\Validation\ValidationException) {
+            return redirect()->route('register.form')->withErrors([['error' => 'contact with admin, error 503']])->withInput();
+            Log::error('Error en la base de datos: ' . $exception->getMessage());
+        }
+        
+
+        parent::report($exception);
+    }
 
     /**
      * A list of the exception types that are not reported.

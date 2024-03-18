@@ -39,14 +39,14 @@ class AuthController extends Controller
     } catch (\Exception $e) {
         Log::error('Exception during 2FA form: ' . $e->getMessage());
         return redirect()->route('login.form')->withErrors(['error' => '2733']);
-    } catch (QueryException $e) {
+    } catch (\Illuminate\Database\QueryException $e) {
         Log::error('QueryException during 2FA form: ' . $e->getMessage());
         return redirect()->route('login.form')->withErrors(['error' => '2758']);
-    } catch (PDOException $e) {
+    } catch (\PDOException $e) {
         Log::error('PDOException during 2FA form: ' . $e->getMessage());
         return redirect()->route('login.form')->withErrors(['error' => '2742']);
     }
-    catch (ValidationException $e) {
+    catch (\Illuminate\Validation\ValidationException $e) {
         Log::error('ValidationException during 2FA form: ' . $e->getMessage());
         return redirect()->route('login.form')->withErrors(['error' => '2760']);
     }
