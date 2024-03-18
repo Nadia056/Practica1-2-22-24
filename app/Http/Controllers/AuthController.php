@@ -29,12 +29,23 @@ class AuthController extends Controller
      * Muestra el formulario del codigo*/
     public function show2FAForm($id)
     {
+        try{
         $userRole = Auth::user()->role_id;
         if ($userRole == 2) {
             Log::channel(('slack'))->warning('User with id ' . Auth::id() . ' tried to access 2FA form');
             return redirect()->route('welcome');
         }
         return view('2FA', ["id" => $id]);
+    } catch (\Exception $e) {
+        Log::error('Exception during 2FA form: ' . $e->getMessage());
+        return redirect()->route('login.form')->withErrors(['error' => '2733']);
+    } catch (QueryException $e) {
+        Log::error('QueryException during 2FA form: ' . $e->getMessage());
+        return redirect()->route('login.form')->withErrors(['error' => '2758']);
+    } catch (PDOException $e) {
+        Log::error('PDOException during 2FA form: ' . $e->getMessage());
+        return redirect()->route('login.form')->withErrors(['error' => '2742']);
+    }
     }
 
 
@@ -117,6 +128,10 @@ class AuthController extends Controller
             Log::error('ValidationException during login: ' . $e->getMessage());
             return redirect()->route('login.form')->withErrors(['error' => 'contact with admin, error 2760']);
         }
+        catch (\Exception $e) {
+            Log::error('Exception during login: ' . $e->getMessage());
+            return redirect()->route('login.form')->withErrors(['error' => 'contact with admin, error 2733']);
+        }
     }
 
     /**
@@ -153,6 +168,7 @@ class AuthController extends Controller
             Log::error('PDOException during email confirmation: ' . $e->getMessage());
             return redirect()->route('login.form')->withErrors(['error' => '2742']);
         }
+
     }
 
     /**

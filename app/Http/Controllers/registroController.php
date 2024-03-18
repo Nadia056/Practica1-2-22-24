@@ -13,12 +13,15 @@ use Illuminate\Support\Facades\Log;
 
 use PDOException;
 
+use function PHPSTORM_META\type;
+
 class registroController extends Controller
 {
     /**
      * Muestra el formulario de registro*/
     public function showForm()
     {
+        
         return view('register', ["siteKey" => env('GOOGLE_RECAPTCHA_KEY')]);
     }
     /**
