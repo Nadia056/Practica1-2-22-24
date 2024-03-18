@@ -20,6 +20,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Routing\Exceptions\InvalidSignatureException;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Cookie;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
+use Throwable;
 
 class AuthController extends Controller
 {
@@ -60,10 +63,20 @@ class AuthController extends Controller
 
     /**
      * funcion para logearse*/
-    public function login(Request $request)
+    public function login(Request $request, Throwable $exception)
     {
         try {
             //valida los datos del formulario
+            if ($exception instanceof MethodNotAllowedException) {
+                Log::error("Error de petición http: " . $exception->getMessage(). " en la ruta: " . $request->fullUrl(). " con la IP: " . $request->ip());
+                return redirect()->back()->with(['error' => 'Acción no permitida.']);
+        
+            }
+        
+            if ($exception instanceof NotFoundHttpException) {
+                Log::error("Error de petición http: " . $exception->getMessage(). " en la ruta: " . $request->fullUrl(). " con la IP: " . $request->ip());
+                return redirect()->back()->with(['error' => 'Recurso no encontrado.']);
+            }
 
             $validator = Validator::make($request->all(), [
                 'email' => 'required|email',
@@ -129,17 +142,16 @@ class AuthController extends Controller
             return redirect()->route('welcome');
         } catch (PDOException $e) {
             Log::error('PDOException during login: ' . $e->getMessage());
-            return redirect()->route('error');
+            return view('error');
         } catch (\Illuminate\Database\QueryException $e) {
             Log::error('QueryException during login: ' . $e->getMessage());
-            return redirect()->route('error');
+            return view('error');
         } catch (\Illuminate\Validation\ValidationException $e) {
             Log::error('ValidationException during login: ' . $e->getMessage());
             return redirect()->route('error');
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             Log::error('Exception during login: ' . $e->getMessage());
-            return redirect()->route('error');
+            return view('error');
         }
     }
 
