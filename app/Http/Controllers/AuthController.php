@@ -46,7 +46,11 @@ class AuthController extends Controller
         Log::error('PDOException during 2FA form: ' . $e->getMessage());
         return redirect()->route('login.form')->withErrors(['error' => '2742']);
     }
+    catch (ValidationException $e) {
+        Log::error('ValidationException during 2FA form: ' . $e->getMessage());
+        return redirect()->route('login.form')->withErrors(['error' => '2760']);
     }
+}
 
 
     /**
@@ -168,6 +172,10 @@ class AuthController extends Controller
             Log::error('PDOException during email confirmation: ' . $e->getMessage());
             return redirect()->route('login.form')->withErrors(['error' => '2742']);
         }
+        catch (ValidationException $e) {
+            Log::error('ValidationException during email confirmation: ' . $e->getMessage());
+            return redirect()->route('login.form')->withErrors(['error' => '2760']);
+        }
 
     }
 
@@ -256,6 +264,10 @@ class AuthController extends Controller
         } catch (PDOException $e) {
             Log::error('PDOException during logout: ' . $e->getMessage());
             return redirect()->route('login.form')->withErrors(['error' => '2742']);
+        }
+        catch (ValidationException $e) {
+            Log::error('ValidationException during logout: ' . $e->getMessage());
+            return redirect()->route('login.form')->withErrors(['error' => '2760']);
         }
     }
 }
