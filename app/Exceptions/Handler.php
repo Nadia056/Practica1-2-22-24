@@ -22,33 +22,21 @@ class Handler extends ExceptionHandler
     protected $levels = [
         //
     ];
+    public function re(Exception $exception)
+    {
+        parent::report($exception);
+    }
 
     public function render($request, Throwable $e)
     {
-        // Agrega una verificación para evitar bucles de redirección
-        if ($request->routeIs('error')) {
-            return parent::render($request, $e);
+        if ($e instanceof PDOException || $e instanceof QueryException) {
+            return response()->view('error', ['message' => 'Database error: ' . $e->getMessage()]);
         }
 
-        
-
-        return parent::render($request, $e);
-        if ($e instanceof QueryException) {
-            Log::error('Error en la base de datos: ' . $e->getMessage());
-            return response()->view('error');
-        }
-        if ($e instanceof PDOException) {
-            Log::error('Error en la base de datos: ' . $e->getMessage());
-            return response()->view('error');        }
-        if ($e instanceof ValidationException) {
-            Log::error('Error de validación: ' . $e->getMessage());
-            return response()->view('error');        }
-        if ($e instanceof ErrorException) {
-            Log::error('Error en la vista welcome' . $e);
-            return response()->view('error');        }
         return parent::render($request, $e);
     
     }
+   
     /**
      * A list of the exception types that are not reported.
      *
