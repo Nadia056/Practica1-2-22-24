@@ -27,19 +27,19 @@ class Handler extends ExceptionHandler
     {
         if ($e instanceof QueryException) {
             Log::error('Error en la base de datos: ' . $e->getMessage());
-            return redirect()->route('login.form')->withErrors(['error' => 'contact with admin, error 2758']);
+            return view('login');
         }
         if ($e instanceof PDOException) {
             Log::error('Error en la base de datos: ' . $e->getMessage());
-            return redirect()->route('login.form')->withErrors(['error' => 'contact with admin, error 2742']);
+            return view('login');
         }
         if ($e instanceof ValidationException) {
             Log::error('Error de validación: ' . $e->getMessage());
-            return redirect()->route('register.form')->withErrors(['error' => 'contact with admin, error2727 ']);   
+            return view('login');  
         }
         if ($e instanceof ErrorException) {
             Log::error('Error en la vista welcome' . $e);
-            return redirect()->route('login.form');
+            return view('login');
         }
         return parent::render($request, $e);
     
