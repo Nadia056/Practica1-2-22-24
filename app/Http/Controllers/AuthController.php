@@ -43,17 +43,17 @@ class AuthController extends Controller
         return view('2FA', ["id" => $id]);
     } catch (\Exception $e) {
         Log::error('Exception during 2FA form: ' . $e->getMessage());
-        return redirect()->route('login.form')->withErrors(['error' => '2733']);
+        return redirect()->route('error');
     } catch (\Illuminate\Database\QueryException $e) {
         Log::error('QueryException during 2FA form: ' . $e->getMessage());
-        return redirect()->route('login.form')->withErrors(['error' => '2758']);
+        return redirect()->route('error');
     } catch (PDOException $e) {
         Log::error('PDOException during 2FA form: ' . $e->getMessage());
-        return redirect()->route('login.form')->withErrors(['error' => '2742']);
+        return redirect()->route('error');
     }
     catch (\Illuminate\Validation\ValidationException $e) {
         Log::error('ValidationException during 2FA form: ' . $e->getMessage());
-        return redirect()->route('login.form')->withErrors(['error' => '2760']);
+        return redirect()->route('error');
     }
 }
 
@@ -129,21 +129,21 @@ class AuthController extends Controller
             return redirect()->route('welcome');
         } catch (PDOException $e) {
             Log::error('PDOException during login: ' . $e->getMessage());
-            return redirect()->route('login.form')->withErrors(['error' => 'contact with admin, error 2742']);
+            return redirect()->route('error');
         } catch (\Illuminate\Database\QueryException $e) {
             if ($e->errorInfo[1] == 2006) {
                 Log::error('QueryException during login: ' . $e->getMessage());
-                return redirect()->route('login.form')->withErrors(['error' => 'contact with admin, error 500']);
+                return redirect()->route('error');
             }
             Log::error('QueryException during login: ' . $e->getMessage());
-            return redirect()->route('login.form')->withErrors(['error' => 'contact with admin, error 2758']);
+            return redirect()->route('error');
         } catch (\Illuminate\Validation\ValidationException $e) {
             Log::error('ValidationException during login: ' . $e->getMessage());
-            return redirect()->route('login.form')->withErrors(['error' => 'contact with admin, error 2760']);
+            return redirect()->route('error');
         }
         catch (\Exception $e) {
             Log::error('Exception during login: ' . $e->getMessage());
-            return redirect()->route('login.form')->withErrors(['error' => 'contact with admin, error 2733']);
+            return redirect()->route('error');
         }
     }
 
@@ -173,17 +173,17 @@ class AuthController extends Controller
             return view('2FA', ["id" => $id]);
         } catch (\Exception $e) {
             Log::error('Exception during email confirmation: ' . $e->getMessage());
-            return redirect()->route('login.form')->withErrors(['error' => '2733']);
+            return redirect()->route('error');
         } catch (QueryException $e) {
             Log::error('QueryException during email confirmation: ' . $e->getMessage());
-            return redirect()->route('login.form')->withErrors(['error' => '2758']);
+            return redirect()->route('error');
         } catch (PDOException $e) {
             Log::error('PDOException during email confirmation: ' . $e->getMessage());
-            return redirect()->route('login.form')->withErrors(['error' => '2742']);
+            return redirect()->route('error');
         }
         catch (ValidationException $e) {
             Log::error('ValidationException during email confirmation: ' . $e->getMessage());
-            return redirect()->route('login.form')->withErrors(['error' => '2760']);
+            return redirect()->route('error');
         }
 
     }
@@ -235,16 +235,16 @@ class AuthController extends Controller
             return redirect()->back()->withErrors(['error' => 'Invalid code444']);
         } catch (\Exception $e) {
             Log::error('Exception during code verification: ' . $e->getMessage());
-            return redirect()->route('login.form')->withErrors(['error' => '2760']);
+            return redirect()->route('error');
         } catch (QueryException $e) {
             Log::error('QueryException during code verification: ' . $e->getMessage());
-            return redirect()->route('login.form')->withErrors(['error' => '2758']);
+            return redirect()->route('error');
         } catch (ValidationException $e) {
             Log::error('ValidationException during code verification: ' . $e->getMessage());
-            return redirect()->route('login.form')->withErrors(['error' => '2727']);
+            return redirect()->route('error');
         } catch (PDOException $e) {
             Log::error('PDOException during code verification: ' . $e->getMessage());
-            return redirect()->route('login.form')->withErrors(['error' => '2742']);
+            return redirect()->route('error');
         }
     }
 
@@ -266,17 +266,17 @@ class AuthController extends Controller
             return redirect()->route('login.form');
         } catch (\Exception $e) {
             Log::error('Exception during logout: ' . $e->getMessage());
-            return redirect()->route('login.form')->withErrors(['error' => 'Invalid']);
+            return redirect()->route('error');
         } catch (QueryException $e) {
             Log::error('QueryException during logout: ' . $e->getMessage());
-            return redirect()->route('login.form')->withErrors(['error' => '2758']);
+            return redirect()->route('error');
         } catch (PDOException $e) {
             Log::error('PDOException during logout: ' . $e->getMessage());
-            return redirect()->route('login.form')->withErrors(['error' => '2742']);
+            return redirect()->route('error');
         }
         catch (ValidationException $e) {
             Log::error('ValidationException during logout: ' . $e->getMessage());
-            return redirect()->route('login.form')->withErrors(['error' => '2760']);
+            return redirect()->route('error');
         }
     }
 }
