@@ -34,12 +34,9 @@ class Handler extends ExceptionHandler
             return response()->view('error', ['message' => 'Error please try again or  later']);
         }
         if ($e instanceof \Illuminate\Session\TokenMismatchException) {
-            return redirect()->route('login')->withErrors(['message' => 'Your session has expired. Please try again.']);
+            return redirect()->route('login')->withErrors(['message' => 'Did you have credentials?']);
         }
-        if ($e instanceof MethodNotAllowedHttpException) {
-            return redirect()->route('login')->withErrors(['message' => 'Your session has expired. Please try again.']);
-
-        }
+       
 
         return parent::render($request, $e);
     
