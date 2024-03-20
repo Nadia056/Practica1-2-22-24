@@ -34,7 +34,7 @@ class Handler extends ExceptionHandler
             return response()->view('error', ['message' => 'Error please try again or  later']);
         }
         if ($e instanceof \Illuminate\Session\TokenMismatchException) {
-            return redirect()->route('login')->withErrors(['message' => 'Did you have credentials?']);
+            return redirect()->back()->withErrors(['message' => 'Uppps! Something went wrong, please try again']);
         }
        
 
