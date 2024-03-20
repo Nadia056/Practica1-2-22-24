@@ -10,6 +10,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use PDOException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -34,6 +35,10 @@ class Handler extends ExceptionHandler
         }
         if ($e instanceof \Illuminate\Session\TokenMismatchException) {
             return redirect()->route('login')->withErrors(['message' => 'Your session has expired. Please try again.']);
+        }
+        if ($e instanceof MethodNotAllowedHttpException) {
+            return redirect()->route('login')->withErrors(['message' => 'Your session has expired. Please try again.']);
+
         }
 
         return parent::render($request, $e);
