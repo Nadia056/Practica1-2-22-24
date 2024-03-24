@@ -21,7 +21,8 @@ return new class extends Migration
             $table ->char('phone', 10);
             $table->string('verification_code')->nullable();
             $table->boolean('is_verified')->default(false);
-            $table->integer("role_id")->foreign("role_id")->references("id")->on("rols");
+            $table->foreignId('role_id')->references('id')->on('rols');
+            // $table->integer("role_id")->foreign("role_id")->references("id")->on("rols");
             $table->timestamps();
         });
     }
