@@ -11,5 +11,11 @@ class Rol extends Model
         'name',
         'role_id'
     ];
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
+
     use HasFactory;
 }
