@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\SendActivationURL;
+
 use App\Models\User;
-use Illuminate\Database\QueryException;
+use App\Models\Rol;
 use Illuminate\Http\Request;
+use App\Jobs\SendActivationURL;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -14,52 +17,111 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use PDOException;    
+use function PHPSTORM_META\type;
+
+
 
 
 class AuthController extends Controller
 {
-    /**
-     * Muestra el formulario de login*/
-    public function showAuthForm()
+       /*Crea un nuevo usuario*/
+    public function create(Request $request)
     {
-        return view('login');
-    }
+        try {
+            //Diccionario de mensajes de error
+            $errorMessages = [
+                'required' => 'El campo :attribute es obligatorio.',
+                'string' => 'El campo :attribute debe ser una cadena de caracteres.',
+                'max' => 'El campo :attribute no puede tener más de :max caracteres.',
+                'email' => 'El campo :attribute debe ser una dirección de correo electrónico válida.',
+                'unique' => 'El :attribute ya está en uso.',
+                'digits' => 'El campo :attribute debe tener :digits dígitos.',
+                'password' => 'La contraseña debe tener al menos 8 caracteres.'
+            ];
+            //Valida los datos del formulario
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:50',
+                'email' => 'required|string|email|max:100 | unique:users',
+                'password' => 'required|string|min:8',
+                'phone' => 'required|digits:10',
 
-    /**
-     * Muestra el formulario del codigo*/
-    public function show2FAForm($id)
-    {
-        try{
-        $userRole = Auth::user()->role_id;
-        if ($userRole == 2) {
-            Log::channel(('slack'))->warning('User with id ' . Auth::id() . ' tried to access 2FA form');
-            return redirect()->route('welcome');
+            ], $errorMessages);
+
+            //Si la validación falla, redirige al formulario de registro con los errores
+            if ($validator->fails()) {
+                return redirect()->route('register.form')->withErrors($validator)->withInput();
+            }
+            //Valida el captcha
+            $res = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+                'secret' => env('GOOGLE_RECAPTCHA_SECRET'),
+                'response' => $request->input('g-recaptcha-response')
+            ]);
+            //Si el captcha falla, redirige al formulario de registro con los errores
+            if (!$res->json()['success']) {
+                return redirect()->route('register.form')->withErrors(['error' => 'Captcha inválido'])->withInput();
+            }
+            //si el captcha es válido, busca si hay usuarios en la base de datos
+            $client = User::all();
+            //Si no hay usuarios, crea un usuario administrador
+            if ($client->isEmpty()) {
+                $role_id = Rol::where('name', 'Administrator')->first()->id;
+                $client = User::create([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                    'phone' => $request->phone,
+                    'verification_code' => null,
+                    'role_id' => $role_id,
+                    'admin_code' => null
+                ]);
+                $client->save();
+                Log::channel('slack')->info('Admin registrado: ' . $request->email);
+
+                return view('login');
+                
+            }
+
+            //Si hay usuarios, crea un usuario con rol guest
+            $role_id = Rol::where('name', 'Guest')->first()->id;
+            $client = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'phone' => $request->phone,
+                'verification_code' => null,
+                'role_id' => $role_id,
+                'is_verified'=>false
+            ]);
+            $client->save();
+
+            return view('login');
+
+        }//Si hay errores, redirige al formulario de registro 
+         catch (\Illuminate\Validation\ValidationException $e) {
+           
+            Log::error('ValidationException: ' . $e->getMessage());
+            return redirect()->route('error');
+         }
+        catch (\Exception $e) {
+            Log::error('Exception: ' . $e->getMessage());
+            return redirect()->route('error');
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->errorInfo[1] == 2006) {
+                Log::error('QueryException during login: ' . $e->getMessage());
+                return redirect()->route('error');
+            }
+            Log::error('QueryException: ' . $e->getMessage());
+            return redirect()->route('error');
+        } catch (\PDOException $e) {
+            Log::error('PDOException: ' . $e->getMessage());
+            return redirect()->route('error');
         }
-        return view('2FA', ["id" => $id]);
-    } catch (\Exception $e) {
-        Log::error('Exception during 2FA form: ' . $e->getMessage());
-        return redirect()->route('error');
-    } catch (\Illuminate\Database\QueryException $e) {
-        Log::error('QueryException during 2FA form: ' . $e->getMessage());
-        return redirect()->route('error');
-    } catch (PDOException $e) {
-        Log::error('PDOException during 2FA form: ' . $e->getMessage());
-        return redirect()->route('error');
     }
-    catch (\Illuminate\Validation\ValidationException $e) {
-        Log::error('ValidationException during 2FA form: ' . $e->getMessage());
-        return redirect()->route('error');
-    }
-}
-
-
     /**
      * funcion para logearse*/
     public function login(Request $request)
     {
         try {
-         
-
             $validator = Validator::make($request->all(), [
                 'email' => 'required|email',
                 'password' => 'required|string|min:8'
@@ -89,39 +151,85 @@ class AuthController extends Controller
             //el tiempo de espera se reinicia si se logea correctamente
             RateLimiter::clear('login_attempts');
 
-            //si el usuario es adminstrador, se envía un correo de verificación
-            if ($user->role_id == 1) {
-                $url = URL::temporarySignedRoute(
-                    'confirm',
-                    now()->addMinute(5),
-                    ['id' => $user->id]
-                );
+            //verifica si el usuario tiene un rol asignado
+            $user_role = User::join('rols', 'users.role_id', '=', 'rols.id')
+                ->where('users.email', $user->email)
+                ->select('rols.name')
+                ->first();
+                switch ($user_role->name) {
+                    case 'Administrator':
+                        $url = URL::temporarySignedRoute('confirm',now()->addMinute(5),['id' => $user->id]);
+                        // Generar el código de verificación
+                        
+                        $user->admin_code = rand(1000, 9999);
+                        
+                        $admin_code = $user->admin_code;
+                        // Encriptar el código de verificación usando Hash::make()
+                       
+                        $hashed_admin_code = Hash::make($admin_code);
+                        // Guardar el código encriptado en el usuario u otra ubicación si es necesario
+                        $user->admin_code = $hashed_admin_code;
+                        $user->save();
+                        // Despachar el trabajo para enviar el correo electrónico
+                        SendActivationURL::dispatch($url, $user, $admin_code);
+                        return view('message');
+                        break;
+                    case 'Coordinator':
+                         $url = URL::temporarySignedRoute('confirm',now()->addMinute(5),['id' => $user->id]);
+                         $user->verification_code = rand(1000, 9999);
+                            $code = $user->verification_code;
+                            $hashed_code = Hash::make($code);
+                            $user->verification_code = $hashed_code;
+                            $user->save();
+                            SendActivationURL::dispatch($url, $user, $code);
+                            return view('message');
+                        break;
+                    case 'Guest':
+                        $url = URL::temporarySignedRoute('confirm',now()->addMinute(5),['id' => $user->id]);
+                        $user->verification_code = rand(1000, 9999);
+                        $code = $user->verification_code;
+                        $hashed_code = Hash::make($code);
+                        $user->verification_code = $hashed_code;
+                        $user->save();
+                        SendActivationURL::dispatch($url, $user, $code);
+                        return view('message');
+                        break;
+                    default:
+                    return redirect()->route('login')->withErrors(['error' => 'Something went wrong with your account. Please contact the administrator']);
+                    break;
+                }
+            // if ($user->role_id == 1) {
+            //     $url = URL::temporarySignedRoute(
+            //         'confirm',
+            //         now()->addMinute(5),
+            //         ['id' => $user->id]
+            //     );
 
-                // Generar el código de verificación
-                $user->verification_code = rand(1000, 9999);
-                $code = $user->verification_code;
+            //     // Generar el código de verificación
+            //     $user->verification_code = rand(1000, 9999);
+            //     $code = $user->verification_code;
 
-                // Encriptar el código de verificación usando Hash::make()
-                $hashed_code = Hash::make($code);
+            //     // Encriptar el código de verificación usando Hash::make()
+            //     $hashed_code = Hash::make($code);
 
-                // Guardar el código encriptado en el usuario u otra ubicación si es necesario
-                $user->verification_code = $hashed_code;
-                $user->save();
+            //     // Guardar el código encriptado en el usuario u otra ubicación si es necesario
+            //     $user->verification_code = $hashed_code;
+            //     $user->save();
 
-                // Despachar el trabajo para enviar el correo electrónico
-                SendActivationURL::dispatch($url, $user, $code);
+            //     // Despachar el trabajo para enviar el correo electrónico
+            //     SendActivationURL::dispatch($url, $user, $code);
 
-                return view('message');
-            }
+            //     return view('message');
+            // }
 
-            //si el usuario es cliente, se crea un token y se guarda en la sesión
+            // //si el usuario es cliente, se crea un token y se guarda en la sesión
 
-            //$token = $user->createToken('auth_token')->plainTextToken;
-            $user->save();
-            // Autenticar al usuario después del inicio de sesión
-            Auth::login($user);
+            // //$token = $user->createToken('auth_token')->plainTextToken;
+            // $user->save();
+            // // Autenticar al usuario después del inicio de sesión
+            // Auth::login($user);
 
-            return redirect()->route('welcome');
+            // return redirect()->route('welcome');
         } catch (\PDOException $e) {
             Log::error('PDOException during login: ' . $e->getMessage());
             return view('error', ['message' => 'Database error: ' . $e->getMessage()]);
@@ -132,6 +240,7 @@ class AuthController extends Controller
             Log::error('Exception during login: ' . $e->getMessage());
             return view('error', ['message' => 'Unexpected error: ' . $e->getMessage()]);
         }
+        
     }
 
     /**
@@ -184,7 +293,7 @@ class AuthController extends Controller
                 'code' => 'required|digits:4'
             ]);
             if ($validator->fails()) {
-                return redirect()->route('login')->withErrors(['error' => 'Invalid code']);
+                return redirect()->route('login')->withErrors(['error' => 'Invalid code: ']);
             }
             $maxAttempts = 3;
             $decayMinutes = 1;
@@ -213,13 +322,31 @@ class AuthController extends Controller
                 // session(['auth_token' => $token]);
                 RateLimiter::clear('login_attempts');
                 Log::channel('slack')->info('Admin loging successfuly with 2FA: ' . $user->email);
-                return redirect()->route('welcome');
+                $role = User::join('rols', 'users.role_id', '=', 'rols.id')
+                    ->where('users.email', $user->email)
+                    ->select('rols.name')
+                    ->first();
+                 
+                    switch($role->name){
+                        case 'Administrator':
+                            return redirect()->route('AdminHome', ['id' => $user->id]);
+                            break;
+                        case 'Coordinator':
+                            return redirect()->route('CoordHome', ['id' => $user->id]);
+                            break;
+                        case 'Guest':
+                            return redirect()->route('GuestHome', ['id' => $user->id]);
+                            break;
+                        default:
+                            return redirect()->route('login.form')->withErrors(['error' => 'Something went wrong with your account. Please contact the administrator.']);
+                            break;
+                    }
             }
             RateLimiter::hit('login_attempts', $decayMinutes * 60);
 
             // Si el código es incorrecto, redirige al formulario de login con un error
 
-            return redirect()->back()->withErrors(['error' => 'Invalid code444']);
+            return redirect()->back()->withErrors(['error' => 'Invalid code 444']);
         } catch (\Exception $e) {
             Log::error('Exception during code verification: ' . $e->getMessage());
             return redirect()->route('error');

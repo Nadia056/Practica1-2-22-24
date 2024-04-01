@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\registroController;
 
@@ -21,6 +22,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('register',[registroController::class,'create']);
-Route::post('login',[AuthController::class,'login']);
-Route::middleware('auth:sanctum')->post('logout',[AuthController::class,'logout']);
+
+Route::post('login',[ApiController::class,'login']);
+Route::middleware('auth:sanctum')->post('logout',[ApiController::class,'logout']);
+Route::middleware('auth:sanctum')->post('verify-code',[ApiController::class,'verifyCode']);
+Route::post('register',[AuthController::class,'create']);

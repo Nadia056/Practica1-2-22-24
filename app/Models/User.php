@@ -13,7 +13,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     protected $table = 'users';
-    protected $fillable = ['name', 'email', 'password', 'role_id', 'phone', 'verification_code', 'is_verified'];
+    protected $fillable = ['name', 'email', 'password', 'role_id', 'phone', 'verification_code', 'admin_code','is_verified'];
     use HasFactory,HasApiTokens, Notifiable, HasApiTokens;
 
     public function rol()

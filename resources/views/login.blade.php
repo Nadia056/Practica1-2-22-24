@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Login</title>
     <link rel="stylesheet" href="{{asset('css/app.css')}}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -48,15 +48,19 @@
                 </form>
                 <button><a href="{{route('register')}}">Register</a></button>
 
-            </div> @if ($errors->any())
-    <div class="error">
-        <ul>
-            @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-    @endif
+            </div> @if (isset($error))
+            <div class="error">
+                <p>{{ $error }}</p>
+            </div>
+            @elseif ($errors->any())
+            <div class="error">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
         </div>
     </div>
    

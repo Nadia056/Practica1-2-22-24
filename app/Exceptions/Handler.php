@@ -29,14 +29,14 @@ class Handler extends ExceptionHandler
     }
 
     public function render($request, Throwable $e)
-    {
-        if ($e instanceof PDOException || $e instanceof QueryException) {
-            return response()->view('error', ['message' => 'Error please try again or  later']);
+    {   
+          if ($e instanceof PDOException || $e instanceof QueryException) {
+                return response()->view('login', ['error' => 'There was an error with the server, please try again or later']);
+
         }
         if ($e instanceof \Illuminate\Session\TokenMismatchException) {
             return redirect()->back()->withErrors(['message' => 'Uppps! Something went wrong, please try again']);
         }
-       
 
         return parent::render($request, $e);
     

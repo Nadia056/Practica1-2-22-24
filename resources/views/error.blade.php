@@ -9,11 +9,12 @@
 <body>
     <div class="container text-center">
         <h1 class="mt-5">ERROR</h1>
-        @if(isset($message))
+        {{-- @if(isset($message))
             <p>{{$message}}</p>
         @else
             <p>There was an error, please try again later</p>
-        @endif
+        @endif --}}
+        <p>There was an error, please try again later</p>
         <a class="btn btn-outline-dark" href="{{route('login.form')}}">Back</a>
     </div>
 </body>

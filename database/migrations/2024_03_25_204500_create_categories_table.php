@@ -13,16 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table ->char('phone', 10);
-            $table->string('verification_code')->nullable();
-            $table->string('admin_code')->nullable();
-            $table->boolean('is_verified')->default(false);
-            $table->foreignId('role_id')->references('id')->on('rols')->onDelete('cascade')->onUpdate('cascade')->nullable();
             $table->string('status')->default('active');
             $table->timestamps();
         });
@@ -35,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('categories');
     }
 };

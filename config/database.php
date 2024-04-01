@@ -75,7 +75,8 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'search_path' => 'public',
-            'sslmode' => 'verify-full',
+            // 'sslmode' => 'verify-full',
+            'sslmode' => 'prefer',
         ],
 
         'sqlsrv' => [
