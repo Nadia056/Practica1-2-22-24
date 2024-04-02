@@ -263,6 +263,10 @@
     function openDeleteModal(button) {
         var userId = button.getAttribute('data-userid');
         document.getElementById('deleteUser').value = userId;
+        if(userId == 1){
+            alert('You cannot delete this user');
+            return;
+        }
 
         var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
         deleteModal.show();
