@@ -22,7 +22,10 @@ class roleMiddleware
        if ($user->role_id==$role_id) {
            return $next($request);
        }
-       else if ($request->ip() != '192.168.1.2' && $role_id==1 || $role_id==2){
+       else if ($request->ip() != '192.168.1.2' && $role_id==1){
+           return redirect()->route('login.form');
+       }
+       else if($request->ip() == '192.168.1.2' && $role_id==3){
            return redirect()->route('login.form');
        }
 
