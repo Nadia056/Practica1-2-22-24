@@ -182,7 +182,7 @@
                             <label for="category" class="form-label">Category</label>
                             <select name="category" id="edit_category_product" class="form-select">
                                 @foreach ($categories as $category)
-                                @if ($category->name == $product->category)
+                                @if (isset($product) && $category->name == $product->category)
                                 <option value="{{$category->id}}" selected>{{$category->name}}</option>
                                 @else
                                 <option value="{{$category->id}}">{{$category->name}}</option>
