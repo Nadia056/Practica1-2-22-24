@@ -22,6 +22,8 @@ class roleMiddleware
        if ($user->role_id==$role_id) {
 
            return $next($request);
+           dd($user->role_id);
+
        }
 
          else{
