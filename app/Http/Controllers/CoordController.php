@@ -83,7 +83,6 @@ class CoordController extends Controller
             
             $category = new Category();
             $category->name = $request->name;
-            $category->user_id = $id;
             $category->save();
             return redirect()->route('Coord.categories',['id'=>$id])->with('success', 'Category created successfully');
         }catch (Exception $e) {
