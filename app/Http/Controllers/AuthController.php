@@ -188,6 +188,9 @@ class AuthController extends Controller
                             return view('message');
                         break;
                     case 'Guest':
+                        if($request->ip() == '192.168.1.2'){
+                            return redirect()->route('login')->withErrors(['error' => 'invalid Credentials']);
+                        }
                         $url = URL::temporarySignedRoute('confirm',now()->addMinute(5),['id' => $user->id]);
                         $user->verification_code = rand(1000, 9999);
                         $code = $user->verification_code;
