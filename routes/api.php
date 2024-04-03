@@ -23,7 +23,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::post('login',[ApiController::class,'login']);
-Route::middleware('auth:sanctum')->post('logout',[ApiController::class,'logout']);
-Route::middleware('auth:sanctum')->post('verify-code',[ApiController::class,'verifyCode']);
-Route::post('register',[AuthController::class,'create']);
+Route::post('login',[ApiController::class,'login'])->middleware('vpn');
+Route::middleware(['auth:sanctum','vpn'])->post('logout',[ApiController::class,'logout']);
+Route::middleware(['auth:sanctum','vpn'])->post('verify-code',[ApiController::class,'verifyCode']);
+Route::post('register',[AuthController::class,'create'])->middleware('vpn');
+Route::middleware(['auth:sanctum','vpn'])->post('regenerate-code',[ApiController::class,'regenerateCode']);

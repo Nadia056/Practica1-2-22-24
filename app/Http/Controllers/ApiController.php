@@ -116,4 +116,44 @@ class ApiController extends Controller
             return view('error', ['message' => 'Unexpected error: ' . $e->getMessage()]);
         }
     }
+    public function regenerateCode(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'admin_code' => 'required|digits:4'
+            ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'error' => 'The code could not be regenerated. Please try again.'
+                ], 400);
+            }
+            
+            $user = $request->user();
+            if (!Hash::check($request->admin_code, $user->admin_code)) {
+                return response()->json([
+                    'error' => 'Invalid code. The code could not be regenerated. Please try again.'
+                ], 400);
+            }
+            //generar un nuevo codigo de verificacion
+            $user->verification_code = rand(1000, 9999);
+            $code = $user->verification_code;
+            $hashed_code = Hash::make($code);
+            $user->verification_code = $hashed_code;
+            
+            $user->save();
+            return response()->json([
+                'code' => $code
+            ], 200);
+
+        } catch (\PDOException $e) {
+            Log::error('PDOException during regenerateCode: ' . $e->getMessage());
+            return view('error', ['message' => 'Database error: ' . $e->getMessage()]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            Log::error('QueryException during regenerateCode: ' . $e->getMessage());
+            return view('error', ['message' => 'Database query error: ' . $e->getMessage()]);
+        } catch (\Exception $e) {
+            Log::error('Exception during regenerateCode: ' . $e->getMessage());
+            return view('error', ['message' => 'Unexpected error: ' . $e->getMessage()]);
+        }
+    }
 }
