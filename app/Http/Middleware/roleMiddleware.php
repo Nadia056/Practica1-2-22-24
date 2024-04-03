@@ -22,6 +22,9 @@ class roleMiddleware
        if ($user->role_id==$role_id) {
            return $next($request);
        }
+       else if ($request->ip() != '192.168.1.2' && $role_id==1 || $role_id==2){
+           return redirect()->route('login.form');
+       }
 
          else{
             switch ($user->role_id) {
