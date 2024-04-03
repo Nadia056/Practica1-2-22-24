@@ -203,37 +203,7 @@ class AuthController extends Controller
                     default:
                     return redirect()->route('login')->withErrors(['error' => 'Something went wrong with your account. Please contact the administrator']);
                     break;
-                }
-            // if ($user->role_id == 1) {
-            //     $url = URL::temporarySignedRoute(
-            //         'confirm',
-            //         now()->addMinute(5),
-            //         ['id' => $user->id]
-            //     );
-
-            //     // Generar el código de verificación
-            //     $user->verification_code = rand(1000, 9999);
-            //     $code = $user->verification_code;
-
-            //     // Encriptar el código de verificación usando Hash::make()
-            //     $hashed_code = Hash::make($code);
-
-            //     // Guardar el código encriptado en el usuario u otra ubicación si es necesario
-            //     $user->verification_code = $hashed_code;
-            //     $user->save();
-
-            //     // Despachar el trabajo para enviar el correo electrónico
-            //     SendActivationURL::dispatch($url, $user, $code);
-
-            //     return view('message');
-            // }
-
-            // //si el usuario es cliente, se crea un token y se guarda en la sesión
-
-            // //$token = $user->createToken('auth_token')->plainTextToken;
-            // $user->save();
-            // // Autenticar al usuario después del inicio de sesión
-            // Auth::login($user);
+                }         
 
             // return redirect()->route('welcome');
         } catch (\PDOException $e) {

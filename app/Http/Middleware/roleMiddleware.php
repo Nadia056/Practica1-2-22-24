@@ -27,13 +27,24 @@ class roleMiddleware
          else{
             switch ($user->role_id) {
                 case 1:
-                    return redirect()->route('AdminHome', ['id' => $user->id]);
+                    if ($request->ip() != '192.168.1.2') {
+                        return redirect()->route('login.form');
+                    }
+                    else{
+                        return redirect()->route('AdminHome', ['id' => $user->id]);
+                    }
+                    
                     break;
                 case 2:
                     return redirect()->route('CoordHome', ['id' => $user->id]);
                     break;
                 case 3:
+                    if ($request->ip() == '192.168.1.2') {
+                        return redirect()->route('login.form');
+                    }
+                    else{
                     return redirect()->route('GuestHome', ['id' => $user->id]);
+                    }
                     break;
                 default:
                     return redirect()->route('login.form');
