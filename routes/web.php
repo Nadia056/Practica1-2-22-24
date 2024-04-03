@@ -53,7 +53,7 @@ Route::get('/message', function () {
 
 Route::get('/register', [ViewsController::class, 'showForm'])->name('register.form');
 Route::post('/register', [AuthController::class, 'create'])->name('register');
-Route::get('/login', [ViewsController::class, 'showAuthForm'])->name('login.form');
+Route::get('/login', [ViewsController::class, 'showAuthForm'])->name('login.form')->middleware('vpn');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 Route::get('/error', function () {
