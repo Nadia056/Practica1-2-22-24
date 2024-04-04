@@ -32,6 +32,9 @@ class roleMiddleware
                 }
                 break;
             case 2:
+                if ($request->ip() != '192.168.1.2') {
+                    return $next($request);
+                }
                 return redirect()->route('CoordHome', ['id' => $user->id])->with('success', 'Welcome Coordinator');
                 break;
             case 3:
