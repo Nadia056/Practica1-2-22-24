@@ -16,6 +16,7 @@ class vpn2Middleware
      */
     public function handle(Request $request, Closure $next)
     {  $user = $request->user();
+        dd($user);
 
         switch ($user->role_id) {
             case 1: // Admin

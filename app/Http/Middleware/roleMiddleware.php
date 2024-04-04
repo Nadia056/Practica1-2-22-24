@@ -26,10 +26,8 @@ class roleMiddleware
         switch ($user->role_id) {
             case 1:
                     return redirect()->route('AdminHome', ['id' => $user->id])->with('success', 'Welcome Administrator');
-            
                 break;
             case 2:
-
                 return redirect()->route('CoordHome', ['id' => $user->id])->with('success', 'Welcome Coordinator');
                 break;
             case 3:
