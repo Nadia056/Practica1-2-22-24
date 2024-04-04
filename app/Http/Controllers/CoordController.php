@@ -127,12 +127,28 @@ class CoordController extends Controller
         }
     }
 
-    public function deleteCategory($id, $user_id){
+    public function deleteCategory($id, Request $request){
         try{
-            Category::where('id', $id)->update([
+            $validator = Validator::make($request->all(), [
+                'category_id' => 'required|exists:categories,id',
+            ]);
+            if ($validator->fails()) {
+                Log::error('Error in deleteCategoryAdmin' . $validator->errors());
+                return redirect()->back()->with(['error', 'Error with deleting category']);
+            }
+            $category = Category::find($request->category_id);
+       
+            if ($category == null) {
+                Log::error('Error in deleteCategoryAdmin' . 'Category not found');
+                return redirect()->back()->with('error', 'Error with deleting category');
+            }
+
+            //Elimina la categoría
+            Category::where('id', $category->id )->update([
                 'status' => 'inactive',
             ]);
-            return redirect()->route('Coord.categories',['id'=>$user_id])->with('success', 'Category deleted successfully');
+
+            return redirect()->route('Coord.categories', ['id' => $id])->with('success', 'Category deleted successfully');
         }catch (Exception $e) {
             Log::error('Error in deleteCategory' . $e);
             return redirect()->back()->with('error', 'Error deleting category');
