@@ -129,6 +129,7 @@ class CoordController extends Controller
 
     public function deleteCategory($id, Request $request){
         try{
+            dd($request);
             $validator = Validator::make($request->all(), [
                 'category_id' => 'required|exists:categories,id',
             ]);
