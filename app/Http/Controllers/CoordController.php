@@ -129,7 +129,9 @@ class CoordController extends Controller
 
     public function deleteCategory($id, $user_id){
         try{
-            Category::where('id', $id)->inactivate();
+            Category::where('id', $id)->update([
+                'status' => 'inactive',
+            ]);
             return redirect()->route('Coord.categories',['id'=>$user_id])->with('success', 'Category deleted successfully');
         }catch (Exception $e) {
             Log::error('Error in deleteCategory' . $e);
