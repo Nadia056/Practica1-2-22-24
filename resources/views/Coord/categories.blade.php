@@ -167,7 +167,7 @@
                 </div>
                 <div class="modal-body">
                     <p>Are you sure you want to delete the category?</p>
-                    <form action="{{ route('Admin.deleteCategory',['id'=>$id]) }}" method="POST">
+                    <form action="{{ route('Coord.deleteCategory',['id'=>$id]) }}" method="POST">
                         @csrf
                         @method('PUT')
                         <input type="hidden" id="deleteCategoryId" name="category_id">
