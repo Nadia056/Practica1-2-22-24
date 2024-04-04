@@ -16,48 +16,33 @@ class roleMiddleware
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle(Request $request, Closure $next, $role_id)
-    {
-        
-        $user=$request->user();
-       if ($user->role_id==$role_id) {
-           return $next($request);
-       }
-       else if ($request->ip() != '192.168.1.2' && $role_id==1){
-           return redirect()->route('login.form');
-       }
-       else if($request->ip() == '192.168.1.2' && $role_id==3){
-           return redirect()->route('login.form');
-       }
+{
+    $user = $request->user();
 
-         else{
-            switch ($user->role_id) {
-                case 1:
-                    if ($request->ip() != '192.168.1.2') {
-                        return redirect()->route('login.form');
-                    }
-                    else{
-                        return redirect()->route('AdminHome', ['id' => $user->id]);
-                    }
-                    
-                    
-                    break;
-                case 2:
-                    return redirect()->route('CoordHome', ['id' => $user->id]);
-                    break;
-                case 3:
-                    if ($request->ip() == '192.168.1.2') {
-                        return redirect()->route('login.form');
-                    }
-                    else{
-                    return redirect()->route('GuestHome', ['id' => $user->id]);
-                    }
-                    break;
-                default:
-                    return redirect()->route('login.form');
-                    break;
-            }
-         }
-        
-        
+    if ($user->role_id == $role_id) {
+        return $next($request);
     }
+
+    switch ($user->role_id) {
+        case 1:
+            if ($request->ip() != '192.168.1.2') {
+                return redirect()->route('login.form');
+            } else {
+                return redirect()->route('AdminHome', ['id' => $user->id]);
+            }
+            break;
+        case 2:
+            return redirect()->route('CoordHome', ['id' => $user->id]);
+            break;
+        case 3:
+            if ($request->ip() == '192.168.1.2') {
+                return redirect()->route('login.form');
+            } else {
+                return redirect()->route('GuestHome', ['id' => $user->id]);
+            }
+            break;
+        default:
+            return redirect()->route('login.form');
+    }
+}
 }
