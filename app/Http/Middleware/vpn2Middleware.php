@@ -15,22 +15,13 @@ class vpn2Middleware
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle(Request $request, Closure $next)
-    {  $user = $request->user();
-        
-
-        switch ($user->role_id) {
-            case 1: // Admin
-                if ($request->ip() != '192.168.1.2') {
-                    return redirect()->route('login.form');
-                }
-                break;
-            case 3: // Guest
-                if ($request->ip() == '192.168.1.2') {
-                    return redirect()->route('login.form');
-                }
-                break;
-            default:
-                return redirect()->route('login.form');
+    {  
+        $user = $request->user();
+        if ($request->ip() !='192.168.1.2' && $user->role_id == 1) {
+            return redirect()->route('login.form')->with('error', 'Invalid Credentials,');
+        }
+        else if ($request->ip() == '192.168.1.2' && $user->role_id == 3) {
+            return redirect()->route('login.form')->with('error', 'Invalid Credentials,');
         }
 
         return $next($request);
