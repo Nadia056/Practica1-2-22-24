@@ -24,9 +24,6 @@ class vpn2Middleware
                     return redirect()->route('login.form');
                 }
                 break;
-            case 2: // Coordinator
-                return $next($request);
-                break;
             case 3: // Guest
                 if ($request->ip() == '192.168.1.2') {
                     return redirect()->route('login.form');
