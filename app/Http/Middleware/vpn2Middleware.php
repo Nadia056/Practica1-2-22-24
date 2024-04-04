@@ -16,7 +16,7 @@ class vpn2Middleware
      */
     public function handle(Request $request, Closure $next)
     {  $user = $request->user();
-        dd($user);
+        
 
         switch ($user->role_id) {
             case 1: // Admin
@@ -25,7 +25,7 @@ class vpn2Middleware
                 }
                 break;
             case 2: // Coordinator
-                // Coordinator can login from any IP
+                return $next($request);
                 break;
             case 3: // Guest
                 if ($request->ip() == '192.168.1.2') {
