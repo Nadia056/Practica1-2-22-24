@@ -62,7 +62,7 @@ Route::get('/error', function () {
 
 
 //Routes prefix for admin and middleware auth 
-Route::prefix('Admin')->middleware(['auth','role:1'])->group(function () {
+Route::prefix('Admin')->middleware(['auth','role:1','ip'])->group(function () {
     Route::get('/{id}', [ViewsController::class, 'showHomeAdmin'])->name('AdminHome')->where('id', '[0-9]+');
     Route::put('/{id}', [AdminController::class, 'editAdminDash'])->name('Admin.update')->where('id', '[0-9]+');
     Route::put('/edit/{id}', [AdminController::class, 'edit'])->name('Admin.edit');
@@ -83,7 +83,7 @@ Route::prefix('Admin')->middleware(['auth','role:1'])->group(function () {
     Route::put('/{id}/Products/',[AdminController::class, 'deleteProduct'])->name('Admin.deleteProduct')->where('id', '[0-9]+')->where('id', '[0-9]+');
 });
 //Routes prefix for coordinator and middleware auth
-Route::prefix('Coordinator')->middleware(['auth','role:2'])->group(function () {
+Route::prefix('Coordinator')->middleware(['auth','role:2','ip'])->group(function () {
     Route::get('/{id}', [ViewsController::class, 'showHomeCoordinator'])->name('CoordHome')->where('id', '[0-9]+');
     Route::get('/{id}/Categories',[ViewsController::class, 'showCategoriesCoord'])->name('Coord.categories')->where('id', '[0-9]+');
     Route::get('/{id}/Products',[ViewsController::class, 'showProductsCoord'])->name('Coord.products')->where('id', '[0-9]+');
@@ -98,6 +98,6 @@ Route::prefix('Coordinator')->middleware(['auth','role:2'])->group(function () {
 });
 
 //Routes prefix for guest and middleware auth
-Route::prefix('Guest')->middleware(['auth','role:3'])->group(function () {
+Route::prefix('Guest')->middleware(['auth','role:3','ip'])->group(function () {
     Route::get('/{id}', [ViewsController::class, 'showHomeGuest'])->name('GuestHome')->where('id', '[0-9]+');
 });
