@@ -50,15 +50,6 @@
             <div class="col-md-4 mb-3">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Roles</h5>
-                        <p class="card-text">Check the roles from the system, edit the existing roles and delete</p>
-                        <a href="{{ route('Admin.roles',['id'=>$user])}}" id="a" class="btn btn-primary">View all roles</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div class="card">
-                    <div class="card-body">
                         <h5 class="card-title
                         ">Categories</h5>
                         <p class="card-text">Check the categories of the products from the system, create new ones, edit categories and delete</p>
