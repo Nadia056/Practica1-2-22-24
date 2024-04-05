@@ -158,9 +158,6 @@ class AuthController extends Controller
                 ->first();
                 switch ($user_role->name) {
                     case 'Administrator':
-                        if ($request->ip() != '192.168.1.2') {
-                            return redirect()->route('login')->withErrors(['error' => 'invalid Credentials']);
-                        }
                         $url = URL::temporarySignedRoute('confirm',now()->addMinute(5),['id' => $user->id]);
                         // Generar el código de verificación
                         

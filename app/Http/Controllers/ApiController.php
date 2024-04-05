@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 
 class ApiController extends Controller
 {
+    
     public function login(Request $request)
     {
         try {
@@ -65,6 +66,7 @@ class ApiController extends Controller
     public function logout(Request $request)
     {
         try {
+            
             $request->user()->currentAccessToken()->delete();
             return response()->json([
                 'message' => 'Logged out'
@@ -84,6 +86,7 @@ class ApiController extends Controller
 
     {
         try {
+            
             $validator = Validator::make($request->all(), [
                 'admin_code' => 'required|digits:4'
             ]);
@@ -94,6 +97,16 @@ class ApiController extends Controller
             }
 
             $user = $request->user();
+            $user_role = User::join('rols', 'users.role_id', '=', 'rols.id')
+                ->where('users.email', $user->email)
+                ->select('rols.name')
+                ->first();
+            if ($user_role->name != 'Administrator') {
+                return response()->json([
+                    'error' => 'Invalid credentials'
+                ], 400);
+            }
+
 
             if (Hash::check($request->admin_code, $user->admin_code)) {
                 $user->verification_code = rand(1000, 9999);
@@ -129,6 +142,16 @@ class ApiController extends Controller
             }
             
             $user = $request->user();
+            $user_role = User::join('rols', 'users.role_id', '=', 'rols.id')
+                ->where('users.email', $user->email)
+                ->select('rols.name')
+                ->first();
+            //si el usuario es difernte de administrador
+            if ($user_role->name != 'Administrator') {
+                return response()->json([
+                    'error' => 'Invalid credentials'
+                ], 400);
+            }
             if (!Hash::check($request->admin_code, $user->admin_code)) {
                 return response()->json([
                     'error' => 'Invalid code. The code could not be regenerated. Please try again.'
