@@ -244,9 +244,10 @@
         document.getElementById('editPhone').value = userPhone;
         // document.getElementById('editRole').value = userRole;
         var selectElement = document.getElementById('editRole');
-        if (userId ==1)
-        {
-            selectElement.disabled = true;
+
+        if (userId == 1) {
+            document.getElementById('editForm').disabled = true;
+            return;
         }
         
       // Verifica si ya existe una opción con el mismo valor
@@ -268,9 +269,8 @@
         var userId = button.getAttribute('data-userid');
         document.getElementById('deleteUser').value = userId;
         if(userId == 1){
-            //desactivar el boton de eliminar
-            document.getElementById('deleteForm').style.display = 'none';
-
+            document.getElementById('deleteForm').disabled = true;
+            return;
         }
 
         var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
