@@ -22,15 +22,15 @@ use Illuminate\Support\Facades\Route;
 
 //Routes with middleware auth
 Route::middleware(['auth'])->group(function () {
-    // Route::get('/', function () {
-    //     try {
-    //         return view('welcome');
-    //     } catch (Exception $e) {
-    //         Log::error('Error in view welcome' . $e);
-    //         return view('login');
+    Route::get('/', function () {
+        try {
+            return redirect()->route('login.form');
+        } catch (Exception $e) {
+            Log::error('Error in login view' . $e);
+            return view('login');
 
-    //     }
-    // })->name('welcome');
+        }
+    });
      Route::get('/2FA/{id}',  [ViewsController::class, 'show2FAForm'])->name('2FA.form')->where('id', '[0-9]+');
 });
 
