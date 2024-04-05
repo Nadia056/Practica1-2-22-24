@@ -17,19 +17,13 @@ class vpn2Middleware
     public function handle(Request $request, Closure $next)
     {  
         $user = $request->user();
-        $fallbackDomain = 'https://sesystems.online';
         if ($request->ip() !='192.168.1.2' && $user->role_id == 1) {
             return redirect()->route('login.form')->with('error', 'Invalid Credentials,');
         }
         else if ($request->ip() == '192.168.1.2' && $user->role_id == 3) {
             return redirect()->route('login.form')->with('error', 'Invalid Credentials,');
         }
-        else if ($request->ip() == false) { // If IP request fails
-            return redirect($fallbackDomain);
-        }
-
-
-
+       
 
         return $next($request);
     }
