@@ -90,7 +90,7 @@
                         <td class="text-center">{{$usuario->phone}}</td>
                         <td class="text-center">{{ $usuario->role }}</td>
                         <td class="text-center">
-                            @if ($usuario->role != 'Administrator')
+                            @if ($usuario->id != 1)
                             <button type="button" class="btn btn-primary btn-sm edit-btn" onclick="openEditModal(this)" data-userid="{{ $usuario->id }}" data-username="{{ $usuario->name }}" data-useremail="{{ $usuario->email }}" data-userrole="{{ $usuario->role }}" data-userphone="{{$usuario->phone}}">
                                 Update
                             </button>
