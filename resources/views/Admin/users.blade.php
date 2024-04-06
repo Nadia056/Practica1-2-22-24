@@ -127,7 +127,8 @@
                         </div>
                         <div class="form-group">
                             <label for="editEmail">Email</label>
-                            <input readonly type="email" class="form-control" id="editEmail" name="email">
+                            <input type="hidden" name="email" id="editEmail" name="email">
+                            <input disabled type="email" class="form-control" id="editEmail" name="email">
                         </div>
                         <div class="form-group">
                             <label for="editPhone">Phone</label>
