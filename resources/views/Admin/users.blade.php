@@ -49,6 +49,10 @@
             background-color: rgb(0, 2, 98) !important;
             border-color: rgb(31, 31, 31) !important;
         }
+        #editEmail[readonly] {
+         pointer-events: none;
+         background-color: #f0f0f0;     
+        }
     </style>
 </head>
 
@@ -127,7 +131,7 @@
                         </div>
                         <div class="form-group">
                             <label for="editEmail">Email</label>
-                            <input disabled type="email" class="form-control" id="editEmail" name="email">
+                            <input readonly type="email" class="form-control" id="editEmail" name="email">
                         </div>
                         <div class="form-group">
                             <label for="editPhone">Phone</label>
