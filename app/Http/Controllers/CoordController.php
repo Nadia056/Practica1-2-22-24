@@ -100,6 +100,7 @@ class CoordController extends Controller
 
     public function editCategory(Request $request, $id){
         try{
+            dd($id);
             $errorMessages = [
                 'required' => 'El campo :attribute field es obligatorio.',
                 'string' => 'El campo :attribute debe ser una cadena de texto.',
