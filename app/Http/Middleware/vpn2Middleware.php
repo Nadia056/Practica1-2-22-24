@@ -26,12 +26,13 @@ class vpn2Middleware
         $user = $request->user();
 
         if ($request->ip() !='192.168.1.2' && $user->role_id == 1) {
-            
+
+           Auth::logout(); 
             return redirect()->route('login.form')->with('error', 'Try to login again ');
         }
 
         else if ($request->ip() == '192.168.1.2' && $user->role_id == 3) {
-            
+            Auth::logout();
             return redirect()->route('login.form')->with('error', 'Invalid Credentials,');
         }
        
