@@ -100,7 +100,6 @@ class CoordController extends Controller
 
     public function editCategory(Request $request, $id){
         try{
-            dd($id);
             $errorMessages = [
                 'required' => 'El campo :attribute field es obligatorio.',
                 'string' => 'El campo :attribute debe ser una cadena de texto.',
@@ -108,11 +107,12 @@ class CoordController extends Controller
             ];
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string',
+                'category_id' => 'required|int|exists:categories,id',
             ], $errorMessages);
             if ($validator->fails()) {
                 return redirect()->back()->withErrors($validator)->withInput();
             }
-            Category::where('id', $id)->update([
+            Category::where('id', $request->category_id)->update([
                 'name' => $request->name,
             ]);
             return redirect()->route('Coord.categories',['id'=>$request->user_id])->with('success', 'Category updated successfully');
