@@ -234,7 +234,7 @@ class ViewsController extends Controller
         $typeRole = Rol::find(Auth::user()->role_id);
         if ($id != Auth::id()) {
             Log::channel(('slack'))->warning('User with id ' . Auth::id() . ' tried to access guest home');
-            return redirect()->route('login')->withErrors(['error' => 'You do not have permission to access this page']);
+            return redirect()->back();
         }
         if ($typeRole->name != 'Guest') {
             Log::channel(('slack'))->warning('User with id ' . Auth::id() . ' tried to access guest home');
