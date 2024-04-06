@@ -221,8 +221,20 @@ function formatPrice(input) {
     // Elimina cualquier carácter que no sea un número o un punto decimal
     input.value = input.value.replace(/[^\d.]/g, '');
 
-    // Formatea el valor según el formato de moneda mexicana (pesos)
-    input.value = 'MXN ' + parseFloat(input.value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+    // Verifica si ya hay un punto decimal en el valor
+    var decimalIndex = input.value.indexOf('.');
+    if (decimalIndex === -1) {
+        // Si no hay punto decimal, agrega automáticamente dos decimales "00"
+        input.value += '.00';
+    } else {
+        // Si hay un punto decimal, asegura que haya dos dígitos después del punto
+        var decimalPart = input.value.substring(decimalIndex + 1);
+        if (decimalPart.length === 0) {
+            input.value += '00';
+        } else if (decimalPart.length === 1) {
+            input.value += '0';
+        }
+    }
 }
 </script>
     <script>
