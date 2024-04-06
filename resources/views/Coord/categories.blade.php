@@ -90,6 +90,7 @@
                         <th class="text-center"></th>
                     </tr>
                 </thead>
+                
                 <tbody>
                     @foreach ($categories as $category)
                     <tr>
@@ -104,6 +105,7 @@
                     </tr>
                     @endforeach
                 </tbody>
+    
             </table>
         </div>
     </div>

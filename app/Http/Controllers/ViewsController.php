@@ -106,7 +106,7 @@ class ViewsController extends Controller
                 Log::channel(('slack'))->warning('User with id ' . Auth::id() . ' tried to access admin users');
                 return redirect()->back();
             }
-            $users = User::join('rols', 'users.role_id', '=', 'rols.id')->where('users.status', 'active')->orderBy('users.id', 'asc')
+            $users = User::join('rols', 'users.role_id', '=', 'rols.id')->where('users.status', 'active')->orderBy('users.id', 'desc')
                 ->select('users.id', 'users.name', 'users.email', 'rols.name as role', 'users.phone')->paginate(10);
             $roles = Rol::where('status', 'active')->orderBy('id', 'asc')->get();
             //return view('tu_vista', compact('usuarios'));
@@ -130,7 +130,7 @@ class ViewsController extends Controller
                 Log::channel(('slack'))->warning('User with id ' . Auth::id() . ' tried to access admin roles');
                 return redirect()->back();
             }
-            $roles = Rol::where('status', 'active')->orderBy('id', 'asc')->paginate(10);
+            $roles = Rol::where('status', 'active')->orderBy('id', 'desc')->paginate(10);
 
             return view('Admin.roles', compact('roles', 'id'));
         } catch (Exception $e) {
@@ -152,7 +152,7 @@ class ViewsController extends Controller
                 Log::channel(('slack'))->warning('User with id ' . Auth::id() . ' tried to access admin categories');
                 return redirect()->back();
             }
-            $categories = Category::where('status', 'active')->orderBy('id', 'asc')->paginate(10);
+            $categories = Category::where('status', 'active')->orderBy('id', 'desc')->paginate(10);
 
             return view('Admin.categories', compact('categories', 'id'));
         } catch (Exception $e) {
@@ -174,7 +174,7 @@ class ViewsController extends Controller
                 return redirect()->back();
             }
             $products = Product::join('categories', 'products.category_id', '=', 'categories.id')->where('products.status', 'active')->select('products.name', 'products.description', 'products.price', 'categories.name as category', 'products.id')->orderBy('products.id', 'asc')->paginate(10);
-            $categories = Category::where('status', 'active')->orderBy('id', 'asc')->get();
+            $categories = Category::where('status', 'active')->orderBy('id', 'desc')->get();
             return view('Admin.products', compact('products', 'id', 'categories'));
         } catch (Exception $e) {
             Log::error('Error in showProducts' . $e);
@@ -223,7 +223,7 @@ class ViewsController extends Controller
                 return redirect()->back();
             }
 
-            $categories = Category::where('status', 'active')->orderBy('id', 'asc')->paginate(10);
+            $categories = Category::where('status', 'active')->orderBy('id', 'desc')->paginate(10);
 
             return view('Coord.categories', compact('categories', 'id'));
         } catch (Exception $e) {
@@ -245,7 +245,7 @@ class ViewsController extends Controller
                 return redirect()->back();
             }
             $products = Product::join('categories', 'products.category_id', '=', 'categories.id')->where('products.status', 'active')->select('products.name', 'products.description', 'products.price', 'categories.name as category', 'products.id')->orderBy('products.id', 'asc')->paginate(10);
-            $categories = Category::where('status', 'active')->orderBy('id', 'asc')->get();
+            $categories = Category::where('status', 'active')->orderBy('id', 'desc')->get();
             return view('Coord.products', compact('products', 'id', 'categories'));
         } catch (Exception $e) {
             Log::error('Error in showProducts' . $e);
@@ -274,7 +274,7 @@ class ViewsController extends Controller
             }
             $user = User::find($id);
 
-            $products = Product::join('categories', 'products.category_id', '=', 'categories.id')->where('products.status', 'active')->select('products.name', 'products.description', 'products.price', 'categories.name as category', 'products.id')->orderBy('products.id', 'asc')->paginate(10);
+            $products = Product::join('categories', 'products.category_id', '=', 'categories.id')->where('products.status', 'active')->select('products.name', 'products.description', 'products.price', 'categories.name as category', 'products.id')->orderBy('products.id', 'desc')->paginate(10);
             return view('Guest.home', compact('products', 'id', 'user'));
         } catch (\Exception $e) {
             Log::error('Exception during guest home: ' . $e->getMessage());
