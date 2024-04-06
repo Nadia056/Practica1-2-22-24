@@ -171,7 +171,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="price" class="form-label">Price</label>
-                            <input type="text" class="form-control" id="productprice" name="price" onkeydown="if(event.keyCode==13) formatPrice(this)">
+                            <input type="text" class="form-control" id="productprice" name="price" onkeyup="formatPrice(this)">
                         </div>
                         <div class="mb-3">
                             <label for="category" class="form-label">Category</label>
@@ -218,22 +218,13 @@
     </div>
     <script>
 function formatPrice(input) {
-    // Elimina cualquier carácter que no sea un número o un punto decimal
-    var value = input.value.replace(/[^\d.]/g, '');
+    // Elimina cualquier carácter que no sea un número
+    var value = input.value.replace(/[^\d]/g, '');
 
-    // Verifica si ya hay un punto decimal en el valor
-    var decimalIndex = value.indexOf('.');
-    if (decimalIndex === -1) {
-        // Si no hay punto decimal, agrega automáticamente dos decimales "00"
-        value += '.00';
-    } else {
-        // Si hay un punto decimal, asegura que haya dos dígitos después del punto
-        var decimalPart = value.substring(decimalIndex + 1);
-        if (decimalPart.length === 0) {
-            value += '00';
-        } else if (decimalPart.length === 1) {
-            value += '0';
-        }
+    // Aplica el formato solo si el valor es numérico
+    if (!isNaN(value)) {
+        // Formatea el valor con comas para separar los miles
+        value = parseFloat(value).toLocaleString('en-US', {maximumFractionDigits: 2});
     }
 
     // Establece el valor formateado en el campo de entrada
