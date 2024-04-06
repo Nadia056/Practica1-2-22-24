@@ -115,7 +115,7 @@ class CoordController extends Controller
             Category::where('id', $request->category_id)->update([
                 'name' => $request->name,
             ]);
-            return redirect()->route('Coord.categories',['id'=>$request->user_id])->with('success', 'Category updated successfully');
+            return redirect()->route('Coord.categories',['id'=>$id])->with('success', 'Category updated successfully');
         }catch (Exception $e) {
             Log::error('Error in editCategory' . $e);
             return redirect()->back()->with('error', 'Error updating category');
