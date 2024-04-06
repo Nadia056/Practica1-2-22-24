@@ -171,7 +171,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="price" class="form-label">Price</label>
-                            <input type="text" class="form-control" id="productprice" name="price" onblur="formatPrice(this)">
+                            <input type="text" class="form-control" id="productprice" name="price" onkeydown="if(event.keyCode==13) formatPrice(this)">
                         </div>
                         <div class="mb-3">
                             <label for="category" class="form-label">Category</label>
