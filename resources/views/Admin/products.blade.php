@@ -223,12 +223,12 @@ function formatPrice(input) {
 
     // Aplica el formato solo si el valor es numérico
     if (!isNaN(value)) {
-        // Formatea el valor con comas para separar los miles
+        // Formatea el valor con comas para separar los miles y los centavos mexicanos
         value = parseFloat(value).toLocaleString('en-US', {maximumFractionDigits: 2});
+        //value = parseFloat(value).toLocaleString('en-US', {maximumFractionDigits: 2});
     }
 
-    // Establece el valor formateado en el campo de entrada
-    input.value = value;
+    
 }
 </script>
 
