@@ -171,7 +171,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="price" class="form-label">Price</label>
-                            <input type="text" class="form-control" id="productprice" name="price" oninput="formatPrice(this)">
+                            <input type="text" class="form-control" id="productprice" name="price" onblur="formatPrice(this)">
                         </div>
                         <div class="mb-3">
                             <label for="category" class="form-label">Category</label>
@@ -219,24 +219,28 @@
     <script>
 function formatPrice(input) {
     // Elimina cualquier carácter que no sea un número o un punto decimal
-    input.value = input.value.replace(/[^\d.]/g, '');
+    var value = input.value.replace(/[^\d.]/g, '');
 
     // Verifica si ya hay un punto decimal en el valor
-    var decimalIndex = input.value.indexOf('.');
+    var decimalIndex = value.indexOf('.');
     if (decimalIndex === -1) {
         // Si no hay punto decimal, agrega automáticamente dos decimales "00"
-        input.value += '.00';
+        value += '.00';
     } else {
         // Si hay un punto decimal, asegura que haya dos dígitos después del punto
-        var decimalPart = input.value.substring(decimalIndex + 1);
+        var decimalPart = value.substring(decimalIndex + 1);
         if (decimalPart.length === 0) {
-            input.value += '00';
+            value += '00';
         } else if (decimalPart.length === 1) {
-            input.value += '0';
+            value += '0';
         }
     }
+
+    // Establece el valor formateado en el campo de entrada
+    input.value = value;
 }
 </script>
+
     <script>
         function openEditModal(button) {
             var product_id = button.getAttribute('data-productid');
