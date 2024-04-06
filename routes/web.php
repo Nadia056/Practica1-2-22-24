@@ -64,7 +64,7 @@ Route::get('/error', function () {
 //Routes prefix for admin and middleware auth 
 Route::prefix('Admin')->middleware(['auth','role:1','ip'])->group(function () {
     Route::get('/{id}', [ViewsController::class, 'showHomeAdmin'])->name('AdminHome')->where('id', '[0-9]+');
-    Route::put('/{id}', [AdminController::class, 'editAdminDash'])->name('Admin.update')->where('id', '[0-9]+');
+    Route::put('/{id}', [AdminController::class, 'editDash'])->name('Admin.update')->where('id', '[0-9]+');
     Route::put('/edit/{id}', [AdminController::class, 'edit'])->name('Admin.edit');
     Route::get('/{id}/Users',[ViewsController::class, 'showUsersAdmin'])->name('Admin.users')->where('id', '[0-9]+');
     Route::post('/{id}/Users',[AdminController::class, 'createUser'])->name('Admin.create')->where('id', '[0-9]+');
