@@ -207,6 +207,8 @@
                         <div class="form-group">
                             <label for="createPhone">Phone</label>
                             <input type="text" class="form-control" id="createPhone" pattern="[0-9]{10}" name="phone">
+                            <input type="text" maxlength="10" class="form-control" required id="createPhone" name="phone" pattern="\d{10}" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Please enter a valid phone number')" onchange="this.setCustomValidity('')"/>
+
                         </div>
                         <div class="form-group">
                             <label for="createPassword">Password</label>
