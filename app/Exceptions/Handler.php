@@ -31,7 +31,7 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $e)
     {   
           if ($e instanceof PDOException || $e instanceof QueryException) {
-                return redirect()->route('login.form', ['error' => 'There was an error with the server, please try again or later']);
+                return response()->view('login', ['error' => 'There was an error with the server, please try again or later']);
 
         }
         if ($e instanceof \Illuminate\Session\TokenMismatchException) {
