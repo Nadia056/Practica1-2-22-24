@@ -220,7 +220,7 @@
         function formatPrice(input) {
             var value = input.value.replace(/\D/g, '');
             value = value.replace(/([0-9]{2})$/, ',$1');
-            input.value = '$' + value;
+            input.value = value;
         }
     </script>
 
