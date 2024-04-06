@@ -232,11 +232,16 @@ class ViewsController extends Controller
         try{
         //Verifica si el usuario tiene el rol de invitado
         $typeRole = Rol::find(Auth::user()->role_id);
+        if ($id != Auth::id()) {
+            Log::channel(('slack'))->warning('User with id ' . Auth::id() . ' tried to access guest home');
+            return redirect()->route('login')->withErrors(['error' => 'You do not have permission to access this page']);
+        }
         if ($typeRole->name != 'Guest') {
             Log::channel(('slack'))->warning('User with id ' . Auth::id() . ' tried to access guest home');
             return redirect()->route('login')->withErrors(['error' => 'You do not have permission to access this page']);
         }
         $user = User::find($id);
+        
         $products = Product::join('categories', 'products.category_id', '=', 'categories.id')->where('products.status', 'active')->select('products.name', 'products.description', 'products.price', 'categories.name as category', 'products.id')->orderBy('products.id', 'asc')->paginate(10);
         return view('Guest.home', compact('products', 'id', 'user'));
     }catch (\Exception $e) {
