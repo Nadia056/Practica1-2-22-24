@@ -103,6 +103,7 @@
                     </tr>
                     @endforeach
                 </tbody>
+            </table>
         </div>
     </div>
     <div class="d-flex justify-content-center">
@@ -131,7 +132,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="price" class="form-label">Price</label>
-                            <input type="text" class="form-control" id="price" name="price">
+                            <input type="text" class="form-control" id="price" name="price" oninput="formatPrice(this)">
+
                         </div>
                         <div class="mb-3">
                             <label for="category" class="form-label">Category</label>
@@ -169,7 +171,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="price" class="form-label">Price</label>
-                            <input type="text" class="form-control" id="productprice" name="price">
+                            <input type="text" class="form-control" id="productprice" name="price" oninput="formatPrice(this)">
                         </div>
                         <div class="mb-3">
                             <label for="category" class="form-label">Category</label>
@@ -214,6 +216,15 @@
             </div>
         </div>
     </div>
+    <script>
+function formatPrice(input) {
+    // Elimina cualquier carácter que no sea un número o un punto decimal
+    input.value = input.value.replace(/[^\d.]/g, '');
+
+    // Formatea el valor según el formato de moneda mexicana (pesos)
+    input.value = 'MXN ' + parseFloat(input.value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+}
+</script>
     <script>
         function openEditModal(button) {
             var product_id = button.getAttribute('data-productid');
