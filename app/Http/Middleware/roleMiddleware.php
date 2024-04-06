@@ -18,9 +18,8 @@ class roleMiddleware
     public function handle(Request $request, Closure $next, $role_id)
     {
         $user = $request->user();
-        
-        if ($user->role_id == $role_id) {
 
+        if ($user->role_id == $role_id) {
             return $next($request);
         }
 

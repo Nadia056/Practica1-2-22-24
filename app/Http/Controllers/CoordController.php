@@ -133,13 +133,13 @@ class CoordController extends Controller
                 'category_id' => 'required|exists:categories,id',
             ]);
             if ($validator->fails()) {
-                Log::error('Error in deleteCategoryAdmin' . $validator->errors());
+                Log::error('Error in deleteCategoryCoord' . $validator->errors());
                 return redirect()->back()->with(['error', 'Error with deleting category']);
             }
             $category = Category::find($request->category_id);
        
             if ($category == null) {
-                Log::error('Error in deleteCategoryAdmin' . 'Category not found');
+                Log::error('Error in deleteCategoryCoord' . 'Category not found');
                 return redirect()->back()->with('error', 'Error with deleting category');
             }
 
@@ -252,7 +252,7 @@ class CoordController extends Controller
                         'price' => $request->price,
                         'category_id' => $request->category,
                     ]);
-                    return redirect()->route('Admin.products', ['id' => $id])->with('success', 'Product updated successfully');
+                    return redirect()->route('Coord.products', ['id' => $id])->with('success', 'Product updated successfully');
                 }
                 
                 return redirect()->back()->with('error', 'Product already exists');
