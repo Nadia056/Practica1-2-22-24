@@ -171,7 +171,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="price" class="form-label">Price</label>
-                            <input type="text" class="form-control" id="productprice" name="price" onkeyup="formatPrice(this)">
+
+                            <input type="number" required class="form-control" id="productprice" name="price" >
                         </div>
                         <div class="mb-3">
                             <label for="category" class="form-label">Category</label>
@@ -216,13 +217,6 @@
             </div>
         </div>
     </div>
-    <script>
-        function formatPrice(input) {
-            var value = input.value.replace(/\D/g, '');
-            value = value.replace(/([0-9]{2})$/, ',$1');
-            input.value = value;
-        }
-    </script>
 
     <script>
         function openEditModal(button) {
