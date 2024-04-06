@@ -34,7 +34,7 @@ class ViewsController extends Controller
 
      public function show2FAForm($id)
     {     $roles= Rol::join('users', 'rols.id', '=', 'users.role_id')->where('users.id', $id)->select('rols.name')->first();
-        dd($roles);
+       
         try{
         $userRole = Auth::user()->role_id;
 
@@ -77,6 +77,10 @@ class ViewsController extends Controller
     public function showHomeAdmin($id)
     {
         try{
+            if($id != Auth::id()){
+                Log::channel(('slack'))->warning('User with id ' . Auth::id() . ' tried to access admin home');
+                return redirect()->back();
+            }
         //Verifica si el usuario tiene el rol de administrador
         $typeRole = Rol::find(Auth::user()->role_id);
         if ($typeRole->name != 'Administrator') {
@@ -101,6 +105,10 @@ class ViewsController extends Controller
     public function showUsersAdmin(Request $request, $id)
     {
         try{
+            if($id != Auth::id()){
+                Log::channel(('slack'))->warning('User with id ' . Auth::id() . ' tried to access admin users');
+                return redirect()->back();
+            }
             $users = User::join('rols', 'users.role_id', '=', 'rols.id')->where('users.status', 'active')->orderBy('users.id', 'asc')
             ->select('users.id', 'users.name', 'users.email', 'rols.name as role','users.phone')->paginate(10);
             $roles = Rol::where('status', 'active')->orderBy('id', 'asc')->get();
@@ -121,6 +129,10 @@ class ViewsController extends Controller
     public function showRolesAdmin(Request $request, $id)
     {
         try{
+            if($id != Auth::id()){
+                Log::channel(('slack'))->warning('User with id ' . Auth::id() . ' tried to access admin roles');
+                return redirect()->back();
+            }
             $roles = Rol::where('status', 'active')->orderBy('id', 'asc')->paginate(10);
             
             return view('Admin.roles', compact('roles', 'id'));
@@ -139,6 +151,10 @@ class ViewsController extends Controller
     public function showCategoriesAdmin(Request $request, $id)
     {
         try{
+            if($id != Auth::id()){
+                Log::channel(('slack'))->warning('User with id ' . Auth::id() . ' tried to access admin categories');
+                return redirect()->back();
+            }
             $categories = Category::where('status', 'active')->orderBy('id', 'asc')->paginate(10);
             
             return view('Admin.categories', compact('categories', 'id'));
@@ -155,6 +171,10 @@ class ViewsController extends Controller
     }
     public function showProductsAdmin(Request $request, $id){
         try{
+            if($id != Auth::id()){
+                Log::channel(('slack'))->warning('User with id ' . Auth::id() . ' tried to access admin products');
+                return redirect()->back();
+            }
             $products = Product::join('categories', 'products.category_id', '=', 'categories.id')->where('products.status', 'active')->select('products.name', 'products.description', 'products.price', 'categories.name as category', 'products.id')->orderBy('products.id', 'asc')->paginate(10);
             $categories = Category::where('status', 'active')->orderBy('id', 'asc')->get();
             return view('Admin.products', compact('products', 'id', 'categories'));
@@ -173,6 +193,10 @@ class ViewsController extends Controller
     public function showHomeCoordinator($id)
     {
         try{
+            if($id != Auth::id()){
+                Log::channel(('slack'))->warning('User with id ' . Auth::id() . ' tried to access coordinator home');
+                return redirect()->back();
+            }
         //Verifica si el usuario tiene el rol de coordinador
         $typeRole = Rol::find(Auth::user()->role_id);
         if ($typeRole->name != 'Coordinator') {
@@ -196,6 +220,11 @@ class ViewsController extends Controller
     public function showCategoriesCoord(Request $request, $id)
     {
         try{
+            if($id != Auth::id()){
+                Log::channel(('slack'))->warning('User with id ' . Auth::id() . ' tried to access coordinator categories');
+                return redirect()->back();
+            }
+
             $categories = Category::where('status', 'active')->orderBy('id', 'asc')->paginate(10);
             
             return view('Coord.categories', compact('categories', 'id'));
@@ -212,6 +241,10 @@ class ViewsController extends Controller
     }
     public function showProductsCoord(Request $request, $id){
         try{
+            if($id != Auth::id()){
+                Log::channel(('slack'))->warning('User with id ' . Auth::id() . ' tried to access coordinator products');
+                return redirect()->back();
+            }
             $products = Product::join('categories', 'products.category_id', '=', 'categories.id')->where('products.status', 'active')->select('products.name', 'products.description', 'products.price', 'categories.name as category', 'products.id')->orderBy('products.id', 'asc')->paginate(10);
             $categories = Category::where('status', 'active')->orderBy('id', 'asc')->get();
             return view('Coord.products', compact('products', 'id', 'categories'));
