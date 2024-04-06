@@ -94,7 +94,7 @@
                             <label for="phone" class="form-label">
                                 Phone
                             </label>
-                            <input type="text" pattern="[0-9]{10}" required class="form-control" id="phone"  name="phone" oninvalid="this.setCustomValidity('Please enter a valid phone number')" value="{{$user->phone}}" maxlength="10">
+                            <input type="text" pattern="[0-9]*" required class="form-control" id="phone"  name="phone" oninvalid="this.setCustomValidity('Please enter a valid phone number')" value="{{$user->phone}}" maxlength="10">
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
