@@ -110,11 +110,11 @@
                     </tr>
                     @endforeach
                 </tbody>
+            </table>
         </div>
     </div>
     <div class="d-flex justify-content-center">
         {{$products->links('pagination::bootstrap-5')}}
-    </div>
     </div>
     @endif
     {{-- Modal create product --}}
