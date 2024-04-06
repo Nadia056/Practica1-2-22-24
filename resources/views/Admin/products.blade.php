@@ -217,20 +217,12 @@
         </div>
     </div>
     <script>
-function formatPrice(input) {
-    // Elimina cualquier carácter que no sea un número
-    var value = input.value.replace(/[^\d]/g, '');
-
-    // Aplica el formato solo si el valor es numérico
-    if (!isNaN(value)) {
-        // Formatea el valor con comas para separar los miles y los centavos mexicanos
-        value = parseFloat(value).toLocaleString('en-US', {maximumFractionDigits: 2});
-        //value = parseFloat(value).toLocaleString('en-US', {maximumFractionDigits: 2});
-    }
-
-    
-}
-</script>
+        function formatPrice(input) {
+            var value = input.value.replace(/\D/g, '');
+            value = value.replace(/([0-9]{2})$/, ',$1');
+            input.value = '$' + value;
+        }
+    </script>
 
     <script>
         function openEditModal(button) {
