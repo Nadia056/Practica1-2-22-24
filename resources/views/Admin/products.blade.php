@@ -132,7 +132,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="price" class="form-label">Price</label>
-                            <input type="text" class="form-control" id="price" name="price" oninput="formatPrice(this)">
+                            <input type="number" class="form-control" id="price" name="price">
 
                         </div>
                         <div class="mb-3">
