@@ -118,6 +118,9 @@ class ApiController extends Controller
                     'code' => $code
                 ], 200);
             }
+            return response()->json([
+                'error' => 'Invalid code'
+            ], 400);
         } catch (\PDOException $e) {
             Log::error('PDOException during verifyCode: ' . $e->getMessage());
             return view('error', ['message' => 'Database error: ' . $e->getMessage()]);
